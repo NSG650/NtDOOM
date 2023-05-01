@@ -36,7 +36,7 @@ Try restarting `explorer.exe`. If that did not work then restart your system. Do
 
 # How does this work?
 
-Many parts of the Win32 API are usually handled in the kernel side. These include GDI, getting inputs, etc. Many of these functions have syscalls for them. These syscalls are handled by win32k.sys [win32kbase.sys and win32kfull.sys]. 
+Many parts of the Win32 API are usually handled in the kernel side. These include GDI, getting inputs, etc. Many of these functions have syscalls for them. These syscalls are handled by `win32k.sys` [`win32kbase.sys` and `win32kfull.sys`]. 
 
 Here the kernel driver just calls the handler for these syscalls present in win32k. 
 
