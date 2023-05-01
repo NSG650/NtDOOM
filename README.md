@@ -29,6 +29,11 @@ sc create NtDOOM binPath=C:\where\ever\the\driver\is\NtDOOM.sys type=kernel star
 sc start NtDOOM
 ```
 
+# Possible problems
+
+## If the driver fails to load
+Try restarting `explorer.exe`. If that did not work then restart your system. Do not try to rerun the driver if restarting `explorer.exe` did not work, There is a good chance the system will BSOD.
+
 # How does this work?
 
 Many parts of the Win32 API are usually handled in the kernel side. These include GDI, getting inputs, etc. Many of these functions have syscalls for them. These syscalls are handled by win32k.sys [win32kbase.sys and win32kfull.sys]. 
