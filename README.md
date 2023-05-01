@@ -21,7 +21,9 @@ shutdown /r /t 0
 sc create NtDOOM binPath=C:\where\ever\the\driver\is\NtDOOM.sys type=kernel start=demand
 ```
 
-3. Run it!
+3. Place a copy of DOOM on the root of the C: drive with the name "DOOM.WAD" 
+
+4. Run it!
 
 ```
 sc start NtDOOM
