@@ -1,0 +1,425 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Driver Files">
+      <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
+      <Extensions>inf;inv;inx;mof;mc;</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Inf Include="NtDOOM.inf">
+      <Filter>Driver Files</Filter>
+    </Inf>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="entry.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\am_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\d_items.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\d_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\d_net.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\DOOM.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\doomdef.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\doomstat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\dstrings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\f_finale.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\f_wipe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\g_game.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\hu_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\hu_stuff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\i_net.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\i_sound.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\i_system.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\i_video.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\info.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_argv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_bbox.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_cheat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_fixed.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_menu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_random.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\m_swap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_ceilng.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_doors.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_enemy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_floor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_inter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_lights.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_maputl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_mobj.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_plats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_pspr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_saveg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_setup.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_sight.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_spec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_switch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_telept.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_tick.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\p_user.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_bsp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_data.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_draw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_plane.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_segs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_sky.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\r_things.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\s_sound.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\sounds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\st_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\st_stuff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\tables.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\v_video.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\w_wad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\wi_stuff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOM\z_zone.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PureDOOM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\am_map.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_englsh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_event.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_french.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_items.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_main.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_net.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_player.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_textur.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_think.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\d_ticcmd.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\DOOM.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\doom_config.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\doomdata.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\doomdef.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\doomstat.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\doomtype.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\dstrings.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\f_finale.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\f_wipe.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\g_game.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\hu_lib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\hu_stuff.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\i_net.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\i_sound.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\i_system.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\i_video.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\info.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_argv.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_bbox.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_cheat.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_fixed.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_menu.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_misc.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_random.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\m_swap.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_inter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_local.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_mobj.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_pspr.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_saveg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_setup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_spec.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\p_tick.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_bsp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_data.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_defs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_draw.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_local.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_main.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_plane.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_segs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_sky.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_state.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\r_things.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\s_sound.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\sounds.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\st_lib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\st_stuff.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\tables.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\v_video.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\w_wad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\wi_stuff.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOM\z_zone.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="DOOM\DOOMLIC.TXT">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
+  </ItemGroup>
+</Project>

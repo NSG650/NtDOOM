@@ -1,0 +1,9 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+AlignEscapedNewlines: Left
+AllowShortFunctionsOnASingleLine: None
+IndentCaseLabels: true
+IndentWidth: 4
+TabWidth: 4
+UseTab: Always

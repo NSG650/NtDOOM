@@ -1,0 +1,77 @@
+;
+; NtDOOM.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System ; TODO: specify appropriate Class
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=NtDOOM.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+NtDOOM_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+NtDOOM.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%NtDOOM.DeviceDesc%=NtDOOM_Device, Root\NtDOOM ; TODO: edit hw-id
+
+[NtDOOM_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+NtDOOM.sys
+
+;-------------- Service installation
+[NtDOOM_Device.NT.Services]
+AddService = NtDOOM,%SPSVCINST_ASSOCSERVICE%, NtDOOM_Service_Inst
+
+; -------------- NtDOOM driver install sections
+[NtDOOM_Service_Inst]
+DisplayName    = %NtDOOM.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\NtDOOM.sys
+
+;
+;--- NtDOOM_Device Coinstaller installation ------
+;
+
+[NtDOOM_Device.NT.CoInstallers]
+AddReg=NtDOOM_Device_CoInstaller_AddReg
+CopyFiles=NtDOOM_Device_CoInstaller_CopyFiles
+
+[NtDOOM_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[NtDOOM_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[NtDOOM_Device.NT.Wdf]
+KmdfService =  NtDOOM, NtDOOM_wdfsect
+[NtDOOM_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "NtDOOM Installation Disk"
+NtDOOM.DeviceDesc = "NtDOOM Device"
+NtDOOM.SVCDESC = "NtDOOM Service"
