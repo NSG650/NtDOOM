@@ -469,7 +469,6 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject,
 
 	doom_init(3, argv, 0);
 
-	BOOLEAN AddOrSub = FALSE;
 	BOOLEAN HdcRelease = FALSE;
 
 	HDC hdc = NtUserGetDc(0);
