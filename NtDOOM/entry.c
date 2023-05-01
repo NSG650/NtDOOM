@@ -5,18 +5,18 @@
 
 extern int _fltused = 0x9875; // THIS JUST WORKS AND I DONT KNOW WHY!
 
-NT_USER_GET_CURSOR_POS NtUserGetCursorPos = NULL;			// Win32kfull
-NT_USER_GET_DC NtUserGetDc = NULL;						// Win32kbase
-NT_GDI_SELECT_BRUSH NtGdiSelectBrush = NULL;		// Win32kbase GreSelectBrush
-NT_GDI_PAT_BLT NtGdiPatBlt = NULL;		// Win32kfull
-NT_USER_RELEASE_DC NtUserReleaseDc = NULL;		// Win32kbase
-NT_GDI_CREATE_SOLID_BRUSH NtGdiCreateSolidBrush = NULL;		// Win32kfull
-NT_GDI_DELETE_OBJECT_APP NtGdiDeleteObjectApp = NULL;		// Win32kbase
-NT_GDI_CREATE_BITMAP NtGdiCreateBitmap = NULL;		// Win32kfull
-NT_GDI_SELECT_BITMAP NtGdiSelectBitmap = NULL;		// Win32kbase GreSelectBitmap
+NT_USER_GET_CURSOR_POS NtUserGetCursorPos = NULL;				// Win32kfull
+NT_USER_GET_DC NtUserGetDc = NULL;								// Win32kbase
+NT_GDI_SELECT_BRUSH NtGdiSelectBrush = NULL;					// Win32kbase GreSelectBrush
+NT_GDI_PAT_BLT NtGdiPatBlt = NULL;								// Win32kfull
+NT_USER_RELEASE_DC NtUserReleaseDc = NULL;						// Win32kbase
+NT_GDI_CREATE_SOLID_BRUSH NtGdiCreateSolidBrush = NULL;			// Win32kfull
+NT_GDI_DELETE_OBJECT_APP NtGdiDeleteObjectApp = NULL;			// Win32kbase
+NT_GDI_CREATE_BITMAP NtGdiCreateBitmap = NULL;					// Win32kfull
+NT_GDI_SELECT_BITMAP NtGdiSelectBitmap = NULL;					// Win32kbase GreSelectBitmap
 NT_GDI_CREATE_COMPATIBLE_DC NtGdiCreateCompatibleDc = NULL;		// Win32kbase GreCreateCompatibleDC
-NT_GDI_BIT_BLT NtGdiBitBlt = NULL;		// Win32kfull NtGdiBitBlt
-NT_USER_GET_KEY_STATE NtUserGetKeyState = NULL;		// Win32kbase
+NT_GDI_BIT_BLT NtGdiBitBlt = NULL;								// Win32kfull NtGdiBitBlt
+NT_USER_GET_KEY_STATE NtUserGetKeyState = NULL;					// Win32kbase
 
 __forceinline wchar_t locase_w(wchar_t c) {
 	if ((c >= 'A') && (c <= 'Z'))
