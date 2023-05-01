@@ -487,22 +487,15 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject,
 
 		DoomProcessKeys(NtUserGetKeyState);
 
-		if (PsIsThreadTerminating(TargetThread)) {
-			NtUserReleaseDc(memHdc);
-			NtUserReleaseDc(hdc);
-			HdcRelease = TRUE;
+		if (PsIsThreadTerminating(TargetThread))
 			break;
-		}
 
 		Sleep(33);
 	}
 
+	NtUserReleaseDc(memHdc);
+	NtUserReleaseDc(hdc);
 
-	if (!HdcRelease) {
-		NtUserReleaseDc(memHdc);
-		NtUserReleaseDc(hdc);
-	}
-failure:
 	SpoofWin32Thread(OldWin32Thread, OldProcess,
 		OldCid);
 
