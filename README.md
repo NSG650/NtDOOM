@@ -50,7 +50,7 @@ The doom port is based off of [PureDoom](https://github.com/Daivuk/PureDOOM) wit
 
 # Credits
 
-[ReactOS Project](doxygen.reactos.org/) for providing documentations for these raw syscalls.
+[ReactOS Project](https://doxygen.reactos.org/) for providing documentations for these raw syscalls.
 
 [Kernel Drawing](https://github.com/Sentient111/KernelDrawing) for figuring out how to use win32k functions in a kernel driver
 
