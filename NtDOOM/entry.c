@@ -295,7 +295,7 @@ VOID DoomExit(INT code) {
 
 #define DRIVE_ROOT "X:\\"
 
-VOID DoomGetEnv(CHAR* Name) {
+char* DoomGetEnv(CHAR* Name) {
 	if (!strcmp(Name, "HOME"))
 		return DRIVE_ROOT;
 	return NULL;
