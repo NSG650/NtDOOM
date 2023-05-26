@@ -3,7 +3,7 @@
 #include "types.h"
 #include "PureDOOM.h"
 
-extern int _fltused = 0x9875; // THIS JUST WORKS AND I DONT KNOW WHY!
+int _fltused = 0x9875; // THIS JUST WORKS AND I DONT KNOW WHY!
 
 NT_USER_GET_CURSOR_POS NtUserGetCursorPos = NULL;				// Win32kfull
 NT_USER_GET_DC NtUserGetDc = NULL;								// Win32kbase
@@ -61,28 +61,68 @@ PVOID GetModuleBase(WCHAR* Name, PDRIVER_OBJECT DriverObject) {
 	return NULL;
 }
 
-
-// This is horribly bad and there must be something better out there
-PETHREAD GetThreadByProcessName(CHAR* Name, ULONG* ThreadId, PVOID* Win32Thread) {
-	for (ULONG i = 1; i < 0xffff; i++) {
-		PETHREAD currThread = NULL;
-		NTSTATUS status = PsLookupThreadByThreadId(i, &currThread);
-
-		if (!NT_SUCCESS(status) || !currThread) continue;
-
-		if (PsIsThreadTerminating(currThread)) continue;
-
-		PEPROCESS threadOwner = PsGetThreadProcess(currThread);
-		CHAR* processName = (CHAR*)((ULONG_PTR)threadOwner + 0x5a8);
-		if (strcmp(processName, Name) == 0) {
-			RtlCopyMemory(Win32Thread, (PVOID)((UINT64)currThread + 0x1c8),
-				sizeof(PVOID));
-			*ThreadId = i;
-			return currThread;
-		}
-		ObDereferenceObject(currThread);
+NTSTATUS
+OpenSessionProcessThread(
+	_Outptr_ PEPROCESS *Process,
+	_Outptr_ PETHREAD *Thread,
+	_In_ PUNICODE_STRING ProcessName,
+	_In_ ULONG SessionId,
+	_Out_ PVOID *Win32Process,
+	_Out_ PVOID *Win32Thread,
+	_Out_ PCLIENT_ID ClientId
+	)
+{
+	ULONG Size;
+	NTSTATUS Status;
+	if ((Status = ZwQuerySystemInformation(SystemProcessInformation, NULL, 0, &Size) != STATUS_INFO_LENGTH_MISMATCH))
+		return Status;
+	const PSYSTEM_PROCESS_INFORMATION SystemProcessInfo = ExAllocatePoolZero(NonPagedPool, 2ull * Size, 'mooD');
+	if (SystemProcessInfo == NULL)
+		return STATUS_INSUFFICIENT_RESOURCES;
+	Status = ZwQuerySystemInformation(SystemProcessInformation,
+										SystemProcessInfo,
+										2 * Size,
+										NULL);
+	if (!NT_SUCCESS(Status)) {
+		ExFreePool(SystemProcessInfo);
+		return Status;
 	}
-	return NULL;
+
+	PSYSTEM_PROCESS_INFORMATION Entry = SystemProcessInfo;
+	Status = STATUS_NOT_FOUND;
+
+	while (TRUE) {
+
+		if (Entry->ImageName.Buffer != NULL && RtlEqualUnicodeString(&Entry->ImageName, ProcessName, TRUE)) {
+			Status = PsLookupProcessByProcessId(Entry->UniqueProcessId, Process);
+			if (NT_SUCCESS(Status)) {
+				if (PsGetProcessSessionIdEx(*Process) == SessionId) {
+					for (ULONG i = 0; i < Entry->NumberOfThreads; ++i) {
+						SYSTEM_THREAD_INFORMATION ThreadInfo = Entry->Threads[i];
+						Status = PsLookupProcessThreadByCid(&ThreadInfo.ClientId, NULL, Thread);
+						if (NT_SUCCESS(Status)) {
+							if ((*Win32Process = PsGetProcessWin32Process(*Process)) != NULL &&
+								(*Win32Thread = PsGetThreadWin32Thread(*Thread)) != NULL) {
+								*ClientId = ThreadInfo.ClientId;
+								ExFreePool(SystemProcessInfo);
+								return STATUS_SUCCESS;
+							}
+							ObDereferenceObject(*Thread);
+						}
+					}
+				}
+				ObDereferenceObject(*Process);
+			}
+		}
+
+		if (Entry->NextEntryOffset == 0)
+			break;
+
+		Entry = (PSYSTEM_PROCESS_INFORMATION)((ULONG_PTR)Entry + Entry->NextEntryOffset);
+	}
+
+	ExFreePool(SystemProcessInfo);
+	return Status;
 }
 
 NTSTATUS CreateThread(PVOID entry) {
@@ -112,20 +152,6 @@ BOOLEAN FrameRect(HDC hDC, CONST RECT* lprc, HBRUSH hbr) {
 	if (oldbrush)
 		NtGdiSelectBrush(hDC, oldbrush);
 	return TRUE;
-}
-
-VOID SpoofWin32Thread(PVOID newWin32Value, PEPROCESS newProcess,
-	CLIENT_ID newClientId) {
-	PKTHREAD currentThread = KeGetCurrentThread();
-
-	PVOID win32ThreadPtr = (PVOID)((CHAR*)currentThread + 0x1c8);
-	RtlCopyMemory(win32ThreadPtr, &newWin32Value, sizeof(PVOID));
-
-	PVOID processPtr = (PVOID)((CHAR*)currentThread + 0x220);
-	RtlCopyMemory(processPtr, &newProcess, sizeof(PEPROCESS));
-
-	PVOID clientIdPtr = (PVOID)((CHAR*)currentThread + 0x4c8);
-	RtlCopyMemory(clientIdPtr, &newClientId, sizeof(CLIENT_ID));
 }
 
 PVOID AllocateUserMemory(SIZE_T Size) {
@@ -390,26 +416,34 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject,
 		Win32kBase, Win32kFullBase);
 
 
-	ULONG TargetThreadId = 0;
+	PVOID Win32Process = 0;
 	PVOID Win32Thread = 0;
-	CHAR* TargetName = "explorer.exe";
-	PETHREAD TargetThread = GetThreadByProcessName(TargetName, &TargetThreadId, &Win32Thread);
+	PETHREAD TargetThread = NULL;
+	PEPROCESS TargetProcess = NULL;
+	CLIENT_ID targetCid = { 0 };
+	UNICODE_STRING TargetProcessName = RTL_CONSTANT_STRING(L"explorer.exe");
 
-	if (!TargetThreadId || !Win32Thread) {
-		DbgPrint("[!] Failed to get a thread from \"%s\" process\n", TargetName);
-		return STATUS_FAILED_DRIVER_ENTRY;
+	NTSTATUS Status = OpenSessionProcessThread(&TargetProcess, &TargetThread, &TargetProcessName, 1,  &Win32Process, &Win32Thread, &targetCid);
+	if (!NT_SUCCESS(Status)) {
+		DbgPrint("[!] Failed to get a thread from process \"%wZ\"\n", &TargetProcessName);
+		return Status;
+	}
+	Status = PsAcquireProcessExitSynchronization(TargetProcess);
+	if (!NT_SUCCESS(Status)) {
+		ObDereferenceObject(TargetThread);
+		ObDereferenceObject(TargetProcess);
+		DbgPrint("[!] Failed to acquire rundown protection on process \"%wZ\"\n", &TargetProcessName);
+		return Status;
 	}
 
-	CLIENT_ID targetCid = { 0 };
-	RtlCopyMemory(&targetCid, (PVOID)((char*)TargetThread + 0x4c8),
-		sizeof(CLIENT_ID));
+	DbgPrint("[*] TargetThread 0x%llX at 0x%p, thread 0x%llX at 0x%p\n",
+		(ULONG_PTR)targetCid.UniqueProcess, TargetProcess,
+		(ULONG_PTR)targetCid.UniqueThread, TargetThread);
+	DbgPrint("[*] Win32Process = 0x%p\n", Win32Process);
+	DbgPrint("[*] Win32Thread = 0x%p\n", Win32Thread);
 
-	DbgPrint("[*] TargetThread at 0x%llx. The thread id is %lld\n",
-		TargetThread, TargetThreadId);
-
-	KAPC_STATE oldApc = { 0 };
-
-	KeStackAttachProcess(PsGetThreadProcess(TargetThread), &oldApc);
+	KAPC_STATE Apc = { 0 };
+	KeStackAttachProcess(TargetProcess, &Apc);
 
 	NtUserGetDc = RtlFindExportedRoutineByName(Win32kBase, "NtUserGetDC");
 	NtGdiPatBlt =
@@ -432,28 +466,14 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject,
 	NtUserGetKeyState =
 		RtlFindExportedRoutineByName(Win32kBase, "NtUserGetKeyState");
 
-
 	if (!NtUserGetDc || !NtGdiPatBlt || !NtGdiSelectBrush || !NtUserReleaseDc || !NtGdiCreateSolidBrush || !NtGdiDeleteObjectApp || !NtUserGetKeyState) {
+		KeUnstackDetachProcess(&Apc);
+		ObDereferenceObject(TargetThread);
+		PsReleaseProcessExitSynchronization(TargetProcess);
+		ObDereferenceObject(TargetProcess);
 		DbgPrint("[!] Failed to get required function addresses !!\n");
-		return STATUS_FAILED_DRIVER_ENTRY;
+		return STATUS_PROCEDURE_NOT_FOUND;
 	}
-
-	PETHREAD OldThread = 0;
-	CLIENT_ID OldCid = { 0 };
-	PEPROCESS OldProcess = 0;
-	PVOID OldWin32Thread = 0;
-
-	OldThread = KeGetCurrentThread();
-	OldProcess = IoGetCurrentProcess();
-	RtlCopyMemory(
-		&OldCid,
-		(PVOID)((CHAR*)KeGetCurrentThread() + 0x4c8), sizeof(CLIENT_ID));
-	RtlCopyMemory(&OldWin32Thread,
-		(PVOID)((CHAR*)KeGetCurrentThread() + 0x1c8), sizeof(PVOID));
-
-
-	SpoofWin32Thread(Win32Thread, PsGetThreadProcess(TargetThread),
-		targetCid);
 
 	// Now we can use win32k functions
 
@@ -496,12 +516,15 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject,
 	NtUserReleaseDc(memHdc);
 	NtUserReleaseDc(hdc);
 
-	SpoofWin32Thread(OldWin32Thread, OldProcess,
-		OldCid);
+	KeUnstackDetachProcess(&Apc);
 
-	KeUnstackDetachProcess(&oldApc);
-
-	ObDereferenceObject(TargetThread);
+	if (TargetThread != NULL) {
+		ObDereferenceObject(TargetThread);
+	}
+	if (TargetProcess != NULL) {
+		PsReleaseProcessExitSynchronization(TargetProcess);
+		ObDereferenceObject(TargetProcess);
+	}
 
 	return STATUS_SUCCESS;
 }
