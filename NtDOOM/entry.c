@@ -3,6 +3,11 @@
 #include "types.h"
 #include "PureDOOM.h"
 
+typedef struct _WIN32K_THREAD_CONTEXT {
+	KAPC Apc;
+	KEVENT CompletedEvent;
+} WIN32K_THREAD_CONTEXT, *PWIN32K_THREAD_CONTEXT;
+
 int _fltused = 0x9875; // THIS JUST WORKS AND I DONT KNOW WHY!
 
 NT_USER_GET_CURSOR_POS NtUserGetCursorPos = NULL;				// Win32kfull
@@ -388,6 +393,49 @@ VOID DoomProcessKeys(NT_USER_GET_KEY_STATE Function) {
 		doom_key_up(DOOM_KEY_Y);
 }
 
+VOID
+Win32kThreadApcRoutine(
+	_In_ PRKAPC Apc,
+	_Inout_ PKNORMAL_ROUTINE *NormalRoutine,
+	_Inout_ PVOID *NormalContext,
+	_Inout_ PVOID *SystemArgument1,
+	_Inout_ PVOID *SystemArgument2
+	)
+{
+	PWIN32K_THREAD_CONTEXT Context = *SystemArgument1;
+	PETHREAD Thread = KeGetCurrentThread();
+
+	if (PsGetThreadWin32Thread(Thread) == NULL) {
+		DoomPrint("[!] Current thread context does not have a Win32 thread\n");
+		KeSetEvent(&Context->CompletedEvent, 0, FALSE);
+		return;
+	}
+
+	HDC hdc = NtUserGetDc(0);
+	HDC memHdc = NtGdiCreateCompatibleDc(hdc);
+
+	while (Running && !PsIsThreadTerminating(Thread)) {
+		doom_update();
+
+		BYTE* framebuffer = doom_get_framebuffer(4);
+
+		HBITMAP Result = NtGdiCreateBitmap(320, 200, 1, 32, framebuffer);
+
+		HBITMAP Old = NtGdiSelectBitmap(memHdc, Result);
+
+		NtGdiBitBlt(hdc, 0, 0, 300, 200, memHdc, 0, 0, SRCCOPY, 0, 0);
+
+		DoomProcessKeys(NtUserGetKeyState);
+
+		Sleep(33);
+	}
+
+	NtUserReleaseDc(memHdc);
+	NtUserReleaseDc(hdc);
+
+	KeSetEvent(&Context->CompletedEvent, 0, FALSE);
+}
+
 
 VOID DriverUnload(PDRIVER_OBJECT DriverObject) {
 	UNREFERENCED_PARAMETER(DriverObject);
@@ -475,8 +523,6 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject,
 		return STATUS_PROCEDURE_NOT_FOUND;
 	}
 
-	// Now we can use win32k functions
-
 	doom_set_file_io(DoomOpen, DoomClose, DoomRead, NULL, DoomSeek, DoomTell,
 		DoomEof);
 	doom_set_malloc(DoomMalloc, DoomFree);
@@ -489,38 +535,36 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject,
 
 	doom_init(3, argv, 0);
 
-	BOOLEAN HdcRelease = FALSE;
+	// Queue user APC to run the game loop
+	WIN32K_THREAD_CONTEXT Context;
+	RtlZeroMemory(&Context, sizeof(Context));
+	KeInitializeEvent(&Context.CompletedEvent, NotificationEvent, FALSE);
+	KeInitializeApc(&Context.Apc,
+					TargetThread,
+					OriginalApcEnvironment,
+					Win32kThreadApcRoutine,
+					NULL,
+					NULL,
+					UserMode,
+					NULL);
 
-	HDC hdc = NtUserGetDc(0);
-	HDC memHdc = NtGdiCreateCompatibleDc(hdc);
-
-	while (Running) {
-		doom_update();
-
-		BYTE* framebuffer = doom_get_framebuffer(4);
-
-		HBITMAP Result = NtGdiCreateBitmap(320, 200, 1, 32, framebuffer);
-
-		HBITMAP Old = NtGdiSelectBitmap(memHdc, Result);
-
-		NtGdiBitBlt(hdc, 0, 0, 300, 200, memHdc, 0, 0, SRCCOPY, 0, 0);
-
-		DoomProcessKeys(NtUserGetKeyState);
-
-		if (PsIsThreadTerminating(TargetThread))
-			break;
-
-		Sleep(33);
+	BOOLEAN Inserted = KeInsertQueueApc(&Context.Apc,
+						&Context,
+						NULL,
+						2);
+	ObDereferenceObject(TargetThread);
+	if (Inserted) {
+		Status = KeWaitForSingleObject(&Context.CompletedEvent,
+										Executive,
+										KernelMode,
+										FALSE,
+										NULL);
+	} else {
+		Status = STATUS_UNSUCCESSFUL;
 	}
-
-	NtUserReleaseDc(memHdc);
-	NtUserReleaseDc(hdc);
 
 	KeUnstackDetachProcess(&Apc);
 
-	if (TargetThread != NULL) {
-		ObDereferenceObject(TargetThread);
-	}
 	if (TargetProcess != NULL) {
 		PsReleaseProcessExitSynchronization(TargetProcess);
 		ObDereferenceObject(TargetProcess);
