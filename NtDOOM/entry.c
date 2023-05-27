@@ -353,50 +353,49 @@ VOID DoomGetTime(INT* sec, INT* usec) {
 
 // Kill me
 VOID DoomProcessKeys(NT_USER_GET_KEY_STATE Function) {
-	NT_USER_GET_KEY_STATE NtUserGetKeyState = Function;
-	if (NtUserGetKeyState(VK_RETURN) & 0x8000)
+	if (Function(VK_RETURN) & 0x8000)
 		doom_key_down(DOOM_KEY_ENTER);
-	if (!(NtUserGetKeyState(VK_RETURN) & 0x8000))
+	if (!(Function(VK_RETURN) & 0x8000))
 		doom_key_up(DOOM_KEY_ENTER);
 
-	if (NtUserGetKeyState(VK_LEFT) & 0x8000)
+	if (Function(VK_LEFT) & 0x8000)
 		doom_key_down(DOOM_KEY_LEFT_ARROW);
-	if (!(NtUserGetKeyState(VK_LEFT) & 0x8000))
+	if (!(Function(VK_LEFT) & 0x8000))
 		doom_key_up(DOOM_KEY_LEFT_ARROW);
 
-	if (NtUserGetKeyState(VK_RIGHT) & 0x8000)
+	if (Function(VK_RIGHT) & 0x8000)
 		doom_key_down(DOOM_KEY_RIGHT_ARROW);
-	if (!(NtUserGetKeyState(VK_RIGHT) & 0x8000))
+	if (!(Function(VK_RIGHT) & 0x8000))
 		doom_key_up(DOOM_KEY_RIGHT_ARROW);
 
-	if (NtUserGetKeyState(VK_UP) & 0x8000)
+	if (Function(VK_UP) & 0x8000)
 		doom_key_down(DOOM_KEY_UP_ARROW);
-	if (!(NtUserGetKeyState(VK_UP) & 0x8000))
+	if (!(Function(VK_UP) & 0x8000))
 		doom_key_up(DOOM_KEY_UP_ARROW);
 
-	if (NtUserGetKeyState(VK_DOWN) & 0x8000)
+	if (Function(VK_DOWN) & 0x8000)
 		doom_key_down(DOOM_KEY_DOWN_ARROW);
-	if (!(NtUserGetKeyState(VK_DOWN) & 0x8000))
+	if (!(Function(VK_DOWN) & 0x8000))
 		doom_key_up(DOOM_KEY_DOWN_ARROW);
 
-	if (NtUserGetKeyState(VK_SPACE) & 0x8000)
+	if (Function(VK_SPACE) & 0x8000)
 		doom_key_down(DOOM_KEY_SPACE);
-	if (!(NtUserGetKeyState(VK_SPACE) & 0x8000))
+	if (!(Function(VK_SPACE) & 0x8000))
 		doom_key_up(DOOM_KEY_SPACE);
 
-	if (NtUserGetKeyState(VK_CONTROL) & 0x8000)
+	if (Function(VK_CONTROL) & 0x8000)
 		doom_key_down(DOOM_KEY_CTRL);
-	if (!(NtUserGetKeyState(VK_CONTROL) & 0x8000))
+	if (!(Function(VK_CONTROL) & 0x8000))
 		doom_key_up(DOOM_KEY_CTRL);
 
-	if (NtUserGetKeyState(VK_ESCAPE) & 0x8000)
+	if (Function(VK_ESCAPE) & 0x8000)
 		doom_key_down(DOOM_KEY_ESCAPE);
-	if (!(NtUserGetKeyState(VK_ESCAPE) & 0x8000))
+	if (!(Function(VK_ESCAPE) & 0x8000))
 		doom_key_up(DOOM_KEY_ESCAPE);
 
-	if (NtUserGetKeyState('Y') & 0x8000)
+	if (Function('Y') & 0x8000)
 		doom_key_down(DOOM_KEY_Y);
-	if (!(NtUserGetKeyState('Y') & 0x8000))
+	if (!(Function('Y') & 0x8000))
 		doom_key_up(DOOM_KEY_Y);
 }
 
