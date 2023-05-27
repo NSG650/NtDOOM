@@ -2,7 +2,10 @@
 
 Doom running in the NT kernel. [Only tested on NT 10.0.22621.525 as that is what I had on hand]
 
-https://user-images.githubusercontent.com/51860844/235435027-c4137000-5efd-435f-a25f-5f90943ee9be.mp4
+
+
+https://github.com/NSG650/NtDOOM/assets/51860844/b3e47bb3-8b62-4396-ada3-6181dbeb30ea
+
 
 
 
@@ -44,7 +47,9 @@ However one can't simply get the addresses to these functions and call them dire
 
 If you have experience with [how syscalls in Windows work](https://alice.climent-pommeret.red/posts/a-syscall-journey-in-the-windows-kernel/) then you know that not every type of thread can call these GUI syscalls directly. The thread must be running under a Win32 GUI application. 
 
-To bypass that we spoof the kernel thread as if it is a thread from `explorer.exe`. Due to this spoofing process the driver can only run on certain NT kernel versions as the internal data structures for `KTHREAD` and `EPROCESS` usually change.
+To bypass that we spoof the kernel thread as if it is a thread from `explorer.exe`. ~~Due to this spoofing process the driver can only run on certain NT kernel versions as the internal data structures for `KTHREAD` and `EPROCESS` usually change.~~ 
+
+Thanks to [Mattiwatti's](https://github.com/Mattiwatti) [pull request](https://github.com/NSG650/NtDOOM/pull/2) the driver does not have to rely on hard coded offsets to spoof the thread as a win32 thread. Thus in theory this driver can run on most NT systems.
 
 The doom port is based off of [PureDoom](https://github.com/Daivuk/PureDOOM) with slight changes.
 
@@ -55,3 +60,5 @@ The doom port is based off of [PureDoom](https://github.com/Daivuk/PureDOOM) wit
 [Kernel Drawing](https://github.com/Sentient111/KernelDrawing) for figuring out how to use win32k functions in a kernel driver
 
 [Pure Doom](https://github.com/Daivuk/PureDOOM) for providing the base for this doom port
+
+[Mattiwatti's pull request](https://github.com/NSG650/NtDOOM/pull/2) for improving the attaching and spoofing the kernel thread code!! Thank you so much!
