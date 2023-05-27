@@ -102,13 +102,20 @@ OpenSessionProcessThread(
 			Status = PsLookupProcessByProcessId(Entry->UniqueProcessId, Process);
 			if (NT_SUCCESS(Status)) {
 				if (PsGetProcessSessionIdEx(*Process) == SessionId) {
+					// hack to (probably) find the main thread ID
+					CLIENT_ID MinThreadIdCid = { .UniqueProcess = NULL, .UniqueThread = (HANDLE)MAXULONG_PTR };
 					for (ULONG i = 0; i < Entry->NumberOfThreads; ++i) {
-						SYSTEM_THREAD_INFORMATION ThreadInfo = Entry->Threads[i];
-						Status = PsLookupProcessThreadByCid(&ThreadInfo.ClientId, NULL, Thread);
+						if ((ULONG)(ULONG_PTR)Entry->Threads[i].ClientId.UniqueThread < (ULONG)(ULONG_PTR)MinThreadIdCid.UniqueThread) {
+							MinThreadIdCid = Entry->Threads[i].ClientId;
+						}
+					}
+
+					for (ULONG i = 0; i < Entry->NumberOfThreads; ++i) {
+						Status = PsLookupProcessThreadByCid(&MinThreadIdCid, NULL, Thread);
 						if (NT_SUCCESS(Status)) {
 							if ((*Win32Process = PsGetProcessWin32Process(*Process)) != NULL &&
 								(*Win32Thread = PsGetThreadWin32Thread(*Thread)) != NULL) {
-								*ClientId = ThreadInfo.ClientId;
+								*ClientId = MinThreadIdCid;
 								ExFreePool(SystemProcessInfo);
 								return STATUS_SUCCESS;
 							}
